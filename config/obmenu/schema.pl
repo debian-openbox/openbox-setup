@@ -32,7 +32,7 @@ our $SCHEMA = [
 
     #          COMMAND                 LABEL              ICON
     {item => ['thunar',       'File Manager', 'system-file-manager']},
-    {item => ['wezterm',            'Terminal',     'utilities-terminal']},
+    {item => ['terminator',            'Terminal',     'utilities-terminal']},
     {item => ['firefox-esr', 'Web Browser',  'web-browser']},
     {item => ['~/.config/openbox/scripts/help',            'Help',  'system-run']},
 
@@ -103,8 +103,8 @@ our $SCHEMA = [
     {item => ['xscreensaver-command -lock', 'Lock', 'system-lock-screen']},
 
     ## This option uses the default Openbox's "Exit" action
-    {exit => ['Exit', 'application-exit']},
+    #{exit => ['Exit', 'application-exit']},
 
     ## This uses the 'oblogout' menu
-    # {item => ['oblogout', 'Exit', 'application-exit']},
+    {item => ['/usr/local/bin/power.sh', 'Exit', 'application-exit']},
 ]
