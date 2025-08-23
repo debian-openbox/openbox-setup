@@ -665,7 +665,7 @@
     </keybind>
     <keybind key="W-S-v">
       <action name="Execute">
-        <command>bash -ic 'note clip && notify-send " Clipboard saved to notes"'</command>
+        <command>bash -c 'note clip &amp;&amp; notify-send "Clipboard saved to notes"'</command>
       </action>
     </keybind>
     <keybind key="W-h">
