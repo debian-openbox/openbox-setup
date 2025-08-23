@@ -106,5 +106,5 @@ our $SCHEMA = [
     #{exit => ['Exit', 'application-exit']},
 
     ## This uses the 'oblogout' menu
-    {item => ['/usr/local/bin/power.sh', 'Exit', 'application-exit']},
+    {item => ['~/openbox-setup/config/scripts/power.sh', 'Exit', 'application-exit']},
 ]
