@@ -4,13 +4,37 @@
 logout_done=0
 thunar_done=0
 
+# Putanja do power.sh u korisničkom direktorijumu
+power_script="$HOME/openbox-setup/config/scripts/power.sh"
+
 # Pitanje za Logout menu
 read -p "Da li želite da kreirate Logout menu? (da/ne): " answer_logout
 if [ "$answer_logout" = "da" ]; then
-    # Tačka 1: Kopiranje i podešavanje skripte
-    cp ~/openbox-setup/config/scripts/power.sh /usr/local/bin/power.sh
-    chmod +x /usr/local/bin/power.sh
+    # Provera da li power.sh fajl postoji
+    if [ ! -f "$power_script" ]; then
+        echo "Greška: Fajl $power_script ne postoji!"
+        exit 1
+    fi
+
+    # Tačka 1: Kopiranje i podešavanje skripte sa sudo
+    sudo cp "$power_script" /usr/local/bin/power.sh
+    if [ $? -ne 0 ]; then
+        echo "Greška prilikom kopiranja power.sh u /usr/local/bin/"
+        exit 1
+    fi
+
+    sudo chmod +x /usr/local/bin/power.sh
+    if [ $? -ne 0 ]; then
+        echo "Greška prilikom dodeljivanja izvršnih ovlašćenja za power.sh"
+        exit 1
+    fi
+
     openbox --reconfigure
+    if [ $? -ne 0 ]; then
+        echo "Greška prilikom rekonfiguracije Openbox-a"
+        exit 1
+    fi
+
     logout_done=1
 fi
 
@@ -27,8 +51,23 @@ if [ "$answer_thunar" = "da" ]; then
     fi
     
     # 2a: Izmena postojeće akcije "Open Terminal Here"
-    # Koristimo sed za zamenu command linije (pretpostavljamo da postoji tačno jedna takva akcija)
-    sed -i '/<name>Open Terminal Here<\/name>/,/<\/action>/ s|<command>.*</command>|<command>terminator --working-directory %f</command>|' "$uca_file"
+    # Provera da li akcija postoji pre zamene
+    if grep -q "<name>Open Terminal Here</name>" "$uca_file"; then
+        sed -i '/<name>Open Terminal Here<\/name>/,/<\/action>/ s|<command>.*</command>|<command>terminator --working-directory %f</command>|' "$uca_file"
+    else
+        echo "Upozorenje: Akcija 'Open Terminal Here' nije pronađena u $uca_file. Kreiram novu akciju."
+        unique_id=$(date +%s)
+        new_terminal_action="<action>
+<unique-id>$unique_id</unique-id>
+<name>Open Terminal Here</name>
+<command>terminator --working-directory %f</command>
+<description>Open terminal here</description>
+<icon>terminator</icon>
+<patterns>*</patterns>
+<directories/>
+</action>"
+        sed -i "/<\/actions>/i $new_terminal_action" "$uca_file"
+    fi
     
     # 2b: Dodavanje nove akcije "Open Root Terminal Here"
     unique_id=$(date +%s)
@@ -45,7 +84,6 @@ if [ "$answer_thunar" = "da" ]; then
     # Dodaj novu akciju pre zatvarajućeg </actions>
     sed -i "/<\/actions>/i $new_action" "$uca_file"
     
-    # Ponovo učitaj Thunar ako je potrebno (ali Thunar se obično ažurira automatski)
     thunar_done=1
 fi
 
