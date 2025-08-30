@@ -272,8 +272,8 @@ fi
 if [ "$ONLY_CONFIG" = false ]; then
     msg "Installing custom Openbox theme..."
     mkdir -p ~/.themes
-    if [ -d "$SCRIPT_DIR/config/themes/Simply_Circles_Dark" ]; then
-        cp -r "$SCRIPT_DIR/config/themes/Simply_Circles_Dark" ~/.themes/
+    if [ -d "$SCRIPT_DIR/config/themes/dt-dark-theme" ]; then
+        cp -r "$SCRIPT_DIR/config/themes/dt-dark-theme" ~/.themes/
     fi
 fi
 
