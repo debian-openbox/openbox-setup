@@ -57,7 +57,10 @@ if [ "$answer_thunar" = "da" ]; then
     else
         echo "Upozorenje: Akcija 'Open Terminal Here' nije pronađena u $uca_file. Kreiram novu akciju."
         unique_id=$(date +%s)
-        new_terminal_action="<action>
+        # Koristimo temp fajl za umetanje
+        temp_action=$(mktemp)
+        cat > "$temp_action" << EOF
+<action>
 <unique-id>$unique_id</unique-id>
 <name>Open Terminal Here</name>
 <command>terminator --working-directory %f</command>
@@ -65,13 +68,18 @@ if [ "$answer_thunar" = "da" ]; then
 <icon>terminator</icon>
 <patterns>*</patterns>
 <directories/>
-</action>"
-        sed -i "/<\/actions>/i $new_terminal_action" "$uca_file"
+</action>
+EOF
+        sed -i -e "/<\/actions>/ {r $temp_action" -e "N}" "$uca_file"
+        rm -f "$temp_action"
     fi
     
     # 2b: Dodavanje nove akcije "Open Root Terminal Here"
     unique_id=$(date +%s)
-    new_action="<action>
+    # Koristimo temp fajl za umetanje
+    temp_file=$(mktemp)
+    cat > "$temp_file" << EOF
+<action>
 <unique-id>$unique_id</unique-id>
 <name>Open Root Terminal Here</name>
 <command>sh -c &quot;cd %f &amp;&amp; terminator -e &apos;sudo -s&apos;&quot;</command>
@@ -79,10 +87,14 @@ if [ "$answer_thunar" = "da" ]; then
 <icon>terminator</icon>
 <patterns>*</patterns>
 <directories/>
-</action>"
+</action>
+EOF
     
-    # Dodaj novu akciju pre zatvarajućeg </actions>
-    sed -i "/<\/actions>/i $new_action" "$uca_file"
+    # Ubacite sadržaj prije </actions>
+    sed -i -e "/<\/actions>/ {r $temp_file" -e "N}" "$uca_file"
+    
+    # Obrišite temp fajl
+    rm -f "$temp_file"
     
     thunar_done=1
 fi
