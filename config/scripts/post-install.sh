@@ -87,6 +87,7 @@ EOF
 <icon>terminator</icon>
 <patterns>*</patterns>
 <directories/>
+<path/>
 </action>
 EOF
     
