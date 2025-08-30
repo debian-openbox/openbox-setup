@@ -13,7 +13,7 @@ Includes a polished theme, smart automation, dynamic menus, and sane keybindings
 ## 🚀 Installation
 
 ```bash
-git clone https://github.com/drewgrif/openbox-setup.git
+git clone https://github.com/debian-openbox/openbox-setup.git
 cd openbox-setup
 chmod +x install.sh
 ./install.sh
