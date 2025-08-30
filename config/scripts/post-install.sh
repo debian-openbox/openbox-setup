@@ -74,7 +74,7 @@ if [ "$answer_thunar" = "da" ]; then
     new_action="<action>
 <unique-id>$unique_id</unique-id>
 <name>Open Root Terminal Here</name>
-<command>sh -c 'terminator -e \"bash -c \\\"cd %f &amp;&amp; echo 'Direktorijum: %f' &amp;&amp; sudo -s\\\"\"'</command>
+<command>sh -c &quot;cd %f &amp;&amp; terminator -e &apos;sudo -s&apos;&quot;</command>
 <description>Open root terminal here</description>
 <icon>terminator</icon>
 <patterns>*</patterns>
